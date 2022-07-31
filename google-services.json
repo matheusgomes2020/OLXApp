@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "334996498139",
+    "project_id": "olx-app-41b57",
+    "storage_bucket": "olx-app-41b57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334996498139:android:f2ba7c6efdcee5cb508efe",
+        "android_client_info": {
+          "package_name": "matheusgomes.cursoandroid.olx.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334996498139-re7d5scejcdo7djcg6ppgbnbie900nj5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "matheusgomes.cursoandroid.olx.com",
+            "certificate_hash": "b2b8621b3e46acf7fd30866f49958332c8c9d6c9"
+          }
+        },
+        {
+          "client_id": "334996498139-md3u5oanapn0cm6616v885gi3qb9dfmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuA26GjD95em5lDfNupAC97hjejC18q_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334996498139-md3u5oanapn0cm6616v885gi3qb9dfmi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
