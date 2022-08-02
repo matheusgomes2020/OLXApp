@@ -114,7 +114,13 @@ implements View.OnClickListener {
 
     }
 
-    public void salvarAnuncio(View view ){
+    public void validarDadosAnuncio( View view ){
+
+
+
+    }
+
+    public void salvarAnuncio(){
 
         String valor = binding.editTelefone.getText().toString();
         Log.d( "salvar", "salvarAnuncio: " + valor );
