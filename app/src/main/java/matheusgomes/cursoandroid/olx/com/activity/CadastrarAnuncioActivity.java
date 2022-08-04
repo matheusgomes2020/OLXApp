@@ -17,14 +17,26 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import matheusgomes.cursoandroid.olx.com.R;
 import matheusgomes.cursoandroid.olx.com.databinding.ActivityCadastrarAnuncioBinding;
+import matheusgomes.cursoandroid.olx.com.helper.ConfiguracaoFirebase;
 import matheusgomes.cursoandroid.olx.com.helper.Permissoes;
+import matheusgomes.cursoandroid.olx.com.model.Anuncio;
 
 public class CadastrarAnuncioActivity extends AppCompatActivity
 implements View.OnClickListener {
@@ -36,6 +48,13 @@ implements View.OnClickListener {
     };
 
     private List<String> listaFotosRecuperadas = new ArrayList<>();
+    private List<String> listaUrlFotos = new ArrayList<>();
+
+    private Anuncio anuncio;
+
+    private StorageReference storage;
+
+    private android.app.AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +72,8 @@ implements View.OnClickListener {
         binding.imageCadastro3.setOnClickListener( this );
 
         carregarDadosSpinner();
+
+        storage = ConfiguracaoFirebase.getFirebaseStorage();
 
     }
 
@@ -114,16 +135,141 @@ implements View.OnClickListener {
 
     }
 
+    private Anuncio configurarAnuncio(){
+
+        String estado = binding.spinnerEstado.getSelectedItem().toString();
+        String categoria = binding.spinnerCategoria.getSelectedItem().toString();
+        String titulo = binding.editTitulo.getText().toString();
+        String valor = binding.editValor.getText().toString();
+        String telefone = binding.editTelefone.getUnMasked().toString();
+        String descricao = binding.editDescricao.getText().toString();
+
+        Anuncio anuncio = new Anuncio();
+        anuncio.setEstado( estado );
+        anuncio.setCategoria( categoria );
+        anuncio.setTitulo( titulo );
+        anuncio.setValor( valor );
+        anuncio.setTelefone( telefone );
+        anuncio.setDescricao( descricao );
+
+        return anuncio;
+
+    }
+
     public void validarDadosAnuncio( View view ){
 
+        anuncio = configurarAnuncio();
+
+        String valor = String.valueOf( binding.editValor.getRawValue() );
+
+        if ( listaFotosRecuperadas.size() != 0 ){
+            if ( !anuncio.getEstado().isEmpty() ){
+                if ( !anuncio.getCategoria().isEmpty() ){
+                    if ( !anuncio.getTitulo().isEmpty() ){
+                        if ( !valor.isEmpty() && !valor.equals("0") ){
+                            if ( !anuncio.getTelefone().isEmpty() && anuncio.getTelefone().length() >=11 ){
+                                if ( !anuncio.getDescricao().isEmpty() ){
+                                    salvarAnuncio();
+                                }else {
+                                    exibirMensagemErro( "Preencha o campo descricao!" );
+                                }
+                            }else {
+                                exibirMensagemErro( "Preencha o campo telefone, digite ao menos 10 números!" );
+                            }
+                        }else {
+                            exibirMensagemErro( "Preencha o campo valor!" );
+                        }
+                    }else {
+                        exibirMensagemErro( "Preencha o campo titulo!" );
+                    }
+                }else {
+                    exibirMensagemErro( "Preencha o campo categoria!" );
+                }
+            }else {
+                exibirMensagemErro( "Preencha o campo estado!" );
+            }
+
+        }else {
+            exibirMensagemErro( "Selecione ao menos uma foto!" );
+        }
 
 
     }
 
+    private void exibirMensagemErro( String mensagem ){
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
+    }
+
     public void salvarAnuncio(){
 
-        String valor = binding.editTelefone.getText().toString();
-        Log.d( "salvar", "salvarAnuncio: " + valor );
+        dialog = new SpotsDialog.Builder()
+                .setContext( this )
+                .setMessage( "Salvando anúncio" )
+                .setCancelable( false )
+                .build();
+
+        dialog.show();
+        /**
+         * Salvarimagem no Storage
+         */
+        for ( int i=0; i < listaFotosRecuperadas.size(); i++ ){
+
+            String urlImagem = listaFotosRecuperadas.get( i );
+            int tamanhoLista = listaFotosRecuperadas.size();
+            salvarFotoStorage( urlImagem, tamanhoLista, i );
+
+        }
+
+    }
+
+    private void salvarFotoStorage(String urlString, int totalFotos, int contador) {
+
+        //Criar nó no Storage
+        StorageReference imagemAnuncio = storage.child( "imagens" )
+                .child( "anuncios" )
+                .child( anuncio.getIdAnuncio() )
+                .child( "imagem" + contador );
+
+        //Fazer upload do arquivo
+        UploadTask uploadTask = imagemAnuncio.putFile( Uri.parse( urlString ) );
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                imagemAnuncio.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Uri firebaseurl = task.getResult();
+                        String urlConvertida = firebaseurl.toString();
+
+                        listaUrlFotos.add( urlConvertida );
+
+                        if ( totalFotos == listaUrlFotos.size() ){
+
+                            anuncio.setFotos( listaUrlFotos );
+                            anuncio.salvar();
+
+                            dialog.dismiss();
+                            finish();
+
+
+                        }
+
+                    }
+                });
+
+
+
+                //progressDialog.dismiss();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                exibirMensagemErro( "Falha ao fazer upload" );
+                Log.d( "INFO", "Falha ao fazer upload: " + e.getMessage() );
+            }
+        });
 
     }
 

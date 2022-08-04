@@ -30,7 +30,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.MeusAnunciosActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_meus_anuncios"
             android:parentActivityName=".activity.AnunciosActivity"
             android:theme="@style/Theme.OLXApp.NoActionBar" />

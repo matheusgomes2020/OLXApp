@@ -13,14 +13,22 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import matheusgomes.cursoandroid.olx.com.R;
+import matheusgomes.cursoandroid.olx.com.adapter.AdapterAnuncios;
 import matheusgomes.cursoandroid.olx.com.databinding.ActivityMeusAnunciosBinding;
+import matheusgomes.cursoandroid.olx.com.model.Anuncio;
 
 public class MeusAnunciosActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMeusAnunciosBinding binding;
+
+    private List<Anuncio> anuncios = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +38,17 @@ public class MeusAnunciosActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
+
+
+        //AdapterAnuncios adapterAnuncios = new AdapterAnuncios( anuncios, this );
+
+
+        //Configurar RecyclerView
+        binding.i.recyclerAnuncios.setLayoutManager( new LinearLayoutManager( this ));
+        binding.i.recyclerAnuncios.setHasFixedSize( true );
+
+        //binding.i.recyclerAnuncios.setAdapter( adapterAnuncios );
+
 
 
 

@@ -20,7 +20,9 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_meus_anuncios" />
+    <include
+        android:id="@+id/i"
+        layout="@layout/content_meus_anuncios" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
