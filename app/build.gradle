@@ -58,11 +58,17 @@ dependencies {
 
     implementation 'com.firebaseui:firebase-ui-storage:8.0.1'
 
+    //Dependência para máscara de moeda
     implementation'com.github.BlacKCaT27:CurrencyEditText:2.0.2'
 
+    //Dependência para máscara de telefone
     implementation 'com.github.santalu:maskara:1.0.0'
 
+    //Dependência para dialog de progresso
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
+
+    //Dependência para Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 
 
