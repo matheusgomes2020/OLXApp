@@ -305,6 +305,7 @@ implements View.OnClickListener {
 
     private void carregarDadosSpinner(){
 
+        //Configura spinner de estados
         String[] estados = getResources().getStringArray( R.array.estados );
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item,
@@ -313,6 +314,7 @@ implements View.OnClickListener {
         adapter.setDropDownViewResource( com.google.android.material.R.layout.support_simple_spinner_dropdown_item );
         binding.spinnerEstado.setAdapter( adapter );
 
+        //Configura spinner de categorias
         String[] categorias = getResources().getStringArray( R.array.categoria );
         ArrayAdapter<String> adapterCategoria = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item,
