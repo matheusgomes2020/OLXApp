@@ -2,11 +2,12 @@ package matheusgomes.cursoandroid.olx.com.model;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
 import java.util.List;
 
 import matheusgomes.cursoandroid.olx.com.helper.ConfiguracaoFirebase;
 
-public class Anuncio {
+public class Anuncio implements Serializable {
 
 
     private String idAnuncio;

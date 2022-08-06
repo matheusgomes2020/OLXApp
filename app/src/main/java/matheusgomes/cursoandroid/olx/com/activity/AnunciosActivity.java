@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import matheusgomes.cursoandroid.olx.com.R;
 import matheusgomes.cursoandroid.olx.com.adapter.AdapterAnuncios;
 import matheusgomes.cursoandroid.olx.com.databinding.ActivityAnunciosBinding;
 import matheusgomes.cursoandroid.olx.com.helper.ConfiguracaoFirebase;
+import matheusgomes.cursoandroid.olx.com.helper.RecyclerItemClickListener;
 import matheusgomes.cursoandroid.olx.com.model.Anuncio;
 
 public class AnunciosActivity extends AppCompatActivity {
@@ -64,6 +66,33 @@ public class AnunciosActivity extends AppCompatActivity {
         binding.recyclerAnunciosPublicos.setAdapter( adapterAnuncios );
 
         recuperarAnunciosPublicos();
+
+        //Aplicar evento de clique
+        binding.recyclerAnunciosPublicos.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        this,
+                        binding.recyclerAnunciosPublicos,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Anuncio anuncioSelecionado = listaAnuncios.get( position );
+                                Intent i = new Intent( AnunciosActivity.this, DetalhesProdutoActivity.class );
+                                i.putExtra( "anuncioSelecionado", anuncioSelecionado );
+                                startActivity( i );
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            }
+                        }
+                )
+        );
 
     }
 
